@@ -27,7 +27,6 @@ public class ProbeConfiguration {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @Bean
     public Mono<Probe> rabbitMQProbe() {
         return Mono.just(Probe.builder()
                 .description("Rabbit MQ Integration")
@@ -36,7 +35,6 @@ public class ProbeConfiguration {
                 .build());
     }
 
-    @Bean
     public Mono<Probe> leftPlayerProbe() {
         return Mono.just(Probe.builder()
                 .description("Left Player Integration Micro-Service Integration")

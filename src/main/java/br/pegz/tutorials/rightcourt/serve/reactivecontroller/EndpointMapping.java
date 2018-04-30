@@ -1,9 +1,7 @@
 package br.pegz.tutorials.rightcourt.serve.reactivecontroller;
 
-import br.pegz.tutorials.rightcourt.configuration.CourtConfiguration;
+import br.pegz.tutorials.rightcourt.configuration.ProbeConfiguration;
 import br.pegz.tutorials.rightcourt.configuration.model.Probe;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -20,11 +18,10 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class EndpointMapping {
 
+    private final ProbeConfiguration probeConfiguration;
 
-
-    public EndpointMapping(CourtConfiguration court, RabbitTemplate rabbitTemplate) {
-        this.court = court;
-        this.rabbitTemplate = rabbitTemplate;
+    public EndpointMapping(ProbeConfiguration probeConfiguration) {
+        this.probeConfiguration = probeConfiguration;
     }
 
     @Bean
@@ -33,10 +30,12 @@ public class EndpointMapping {
             .and(accept(MediaType.APPLICATION_JSON)), this::handleAllProbes);
     }
 
-    public Mono<ServerResponse> handleAllProbes(ServerRequest serverRequest) {
-        Flux<Probe> probeFlux = Flux.concat(rabbitMQProbe(), leftPlayerProbe());
+    private Mono<ServerResponse> handleAllProbes(ServerRequest serverRequest) {
+        Flux<Probe> probeFlux = Flux.concat(probeConfiguration.rabbitMQProbe(), probeConfiguration.leftPlayerProbe());
         return ServerResponse.ok().body(probeFlux, Probe.class);
     }
+
+
 
 
 }

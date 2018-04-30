@@ -9,7 +9,6 @@ import br.pegz.tutorials.rightcourt.serve.exception.PointException;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import reactor.core.publisher.Flux;
 
 import java.security.SecureRandom;
@@ -32,36 +31,34 @@ public class PlayService {
     public Flux<Play> serve() throws PointException {
         List<Play> plays = Lists.newArrayList(getServePlay());
         Play incomingPlay = courtResource.sendPlayToOtherSide(getServePlay());
-        while(isPlayable(incomingPlay) && isReceivable(incomingPlay)) {
+        while (canContinuePlay(incomingPlay)) {
             log.info("Received play: {}", incomingPlay);
             plays.add(incomingPlay);
-            Play nextPlay = getRespondSpeed(incomingPlay);
-            if(isPlayable(nextPlay)) {
-                try {
-                    incomingPlay = courtResource.sendPlayToOtherSide(nextPlay);
-                } catch (RestClientException ex) {
-                    log.error("Could not reach other side", ex);
-                    log.debug("Next play would be {}", nextPlay);
-                    break;
-                }
-            } else {
-                scoreNotifierService.notifyFoePoint(incomingPlay.getCount() + 1 );
-            }
-            plays.add(nextPlay);
+            Play myPlay = handlePlay(incomingPlay);
+            plays.add(myPlay);
+            incomingPlay = courtResource.sendPlayToOtherSide(myPlay);
         }
-        if (!isPlayable(incomingPlay)) {
-            scoreNotifierService.notifyFoePoint(incomingPlay.getCount());
-        } else if (!isReceivable(incomingPlay)) {
-            scoreNotifierService.notifyMyPoint(incomingPlay.getCount());
-        }
+        notifyPoint(incomingPlay);
         return Flux.fromStream(plays.stream());
     }
 
-    private boolean isPlayable(Play incomingPlay) {
-        return Speed.OMFG != incomingPlay.getSpeed() || Height.BEYOND_REACH != incomingPlay.getHeight();
+    private boolean canContinuePlay(Play incomingPlay) {
+        return !isLeftPoint(incomingPlay) && !isRightPoint(incomingPlay);
     }
 
-    private boolean isReceivable(Play incomingPlay) {
+    private void notifyPoint(Play incomingPlay) {
+        if (isLeftPoint(incomingPlay)) {
+            scoreNotifierService.notifyFoePoint(incomingPlay.getCount());
+        } else if (isRightPoint(incomingPlay)) {
+            scoreNotifierService.notifyMyPoint(incomingPlay.getCount());
+        }
+    }
+
+    private boolean isLeftPoint(Play incomingPlay) {
+        return !isRightPoint(incomingPlay) && Speed.OMFG == incomingPlay.getSpeed() || Height.BEYOND_REACH == incomingPlay.getHeight();
+    }
+
+    private boolean isRightPoint(Play incomingPlay) {
         return Side.NET == incomingPlay.getInnerSide() || Side.OUTSIDE == incomingPlay.getInnerSide();
     }
 
@@ -81,12 +78,12 @@ public class PlayService {
 
 
     public Play handlePlay(Play incomingPlay) throws PointException {
-        if(isReceivable(incomingPlay) && isPlayable(incomingPlay)) {
+        if(!isRightPoint(incomingPlay) && !isLeftPoint(incomingPlay)) {
             return getRespondSpeed(incomingPlay);
-        } else if (!isPlayable(incomingPlay)) {
+        } else if (isLeftPoint(incomingPlay)) {
             scoreNotifierService.notifyFoePoint(incomingPlay.getCount());
             throw new PointException(Side.LEFT);
-        } else if (!isReceivable(incomingPlay)) {
+        } else if (isRightPoint(incomingPlay)) {
             scoreNotifierService.notifyMyPoint(incomingPlay.getCount());
             throw new PointException(Side.RIGHT);
         }
@@ -101,18 +98,6 @@ public class PlayService {
                 .speed(Speed.FAST)
                 .incomingSide(Side.RIGHT)
                 .innerSide(Side.RIGHT)
-                .build();
-    }
-
-    private Play getDefaultPlay(Integer count) {
-        count++;
-        return Play.builder()
-                .count(count)
-                .effect(false)
-                .height(Height.MEDIUM)
-                .speed(Speed.AVG)
-                .incomingSide(Side.RIGHT)
-                .innerSide(Side.LEFT)
                 .build();
     }
 }
