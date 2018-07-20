@@ -6,6 +6,7 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import br.pegz.tutorials.rightcourt.score.ScoreNotifierService;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
+import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

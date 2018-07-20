@@ -1,4 +1,4 @@
-package br.pegz.tutorials.rightcourt.serve;
+package br.pegz.tutorials.rightcourt.serve.resource;
 
 import br.pegz.tutorials.rightcourt.configuration.CourtConfiguration;
 import br.pegz.tutorials.rightcourt.persistence.Play;
