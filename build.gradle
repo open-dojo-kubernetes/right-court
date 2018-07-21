@@ -39,9 +39,9 @@ dependencies {
 	compile('org.springframework.retry:spring-retry')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('io.projectreactor:reactor-test')
-	testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
-	testCompile('org.springframework.security:spring-security-test')
+	testRuntime("org.junit.platform:junit-platform-launcher:1.2.0")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+	testRuntime("org.junit.vintage:junit-vintage-engine:5.2.0")
 }
 
 dependencyManagement {
