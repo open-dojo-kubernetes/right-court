@@ -84,8 +84,28 @@ class PlayServiceTest {
             .innerSide(Side.LEFT)
             .incomingSide(Side.LEFT)
             .speed(Speed.SLOW)
+            .count(0)
+            .height(Height.LOW)
+            .effect(true)
             .build();
 
+    static Play winForLeft = Play.builder()
+            .effect(true)
+            .height(Height.BEYOND_REACH)
+            .incomingSide(Side.LEFT)
+            .speed(Speed.FAST)
+            .count(1)
+            .innerSide(Side.RIGHT)
+            .build();
+
+    static Play winForRight = Play.builder()
+            .innerSide(Side.NET)
+            .incomingSide(Side.LEFT)
+            .count(6)
+            .speed(Speed.FAST)
+            .height(Height.BURNT)
+            .effect(false)
+            .build();
 
 
     void handlePlay() {
