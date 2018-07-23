@@ -27,20 +27,23 @@ repositories {
 
 ext {
 	springCloudVersion = 'Finchley.M8'
+	junit5Version = '5.2.0'
+	lombokVersion = '1.18.0'
 }
 
 dependencies {
-	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-actuator')
-	compile(group:'org.springframework.boot', plugin: 'spring-boot-starter-data-redis')
-	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-amqp')
-	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-webflux')
-	compile(group: 'org.springframework.cloud', plugin: 'spring-cloud-starter-netflix-hystrix')
-	compile(group: 'org.springframework.cloud', plugin: 'spring-cloud-stream-reactive')
-	compile(group: 'org.springframework.retry', plugin: 'spring-retry')
-	compileOnly(group: 'org.projectlombok', plugin: 'lombok')
-	testCompile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-test')
-	testCompile(group: 'org.junit.jupiter', plugin: 'junit-jupiter-api')
-	testRuntime(group: 'org.junit.jupiter', plugin: 'junit-jupiter-engine')
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+	compile group:'org.springframework.boot', name: 'spring-boot-starter-data-redis'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix'
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-stream-reactive'
+	compile group: 'org.springframework.retry', name: 'spring-retry'
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
+	testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junit5Version
+	testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
 }
 
 dependencyManagement {
