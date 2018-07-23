@@ -7,24 +7,23 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
 import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
 import org.junit.Rule;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import reactor.core.publisher.Flux;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
 
@@ -80,16 +79,15 @@ class PlayServiceTest {
         expectedException.expectMessage("Point for side: RIGHT");
     }
 
-    static Play validPlay = Play.builder()
-            .innerSide(Side.LEFT)
+    public final static Play winForRight = Play.builder()
+            .innerSide(Side.NET)
             .incomingSide(Side.LEFT)
-            .speed(Speed.SLOW)
-            .count(0)
-            .height(Height.LOW)
-            .effect(true)
+            .count(6)
+            .speed(Speed.FAST)
+            .height(Height.BURNT)
+            .effect(false)
             .build();
-
-    static Play winForLeft = Play.builder()
+    final static Play winForLeft = Play.builder()
             .effect(true)
             .height(Height.BEYOND_REACH)
             .incomingSide(Side.LEFT)
@@ -98,18 +96,32 @@ class PlayServiceTest {
             .innerSide(Side.RIGHT)
             .build();
 
-    static Play winForRight = Play.builder()
-            .innerSide(Side.NET)
-            .incomingSide(Side.LEFT)
-            .count(6)
-            .speed(Speed.FAST)
-            .height(Height.BURNT)
-            .effect(false)
-            .build();
+    static Stream<Play> getSuccessPlay() {
+        return Stream.<Play>builder().add(Play.builder()
+                .innerSide(Side.LEFT)
+                .incomingSide(Side.LEFT)
+                .speed(Speed.SLOW)
+                .count(0)
+                .height(Height.LOW)
+                .effect(true)
+                .build()).build();
+    }
 
+    static Stream<Play> getPointPlays() {
+        return Stream.<Play>builder().add(winForLeft).add(winForRight).build();
+    }
 
-    void handlePlay() {
+    @ParameterizedTest(name = "Testing response for [{index}] {arguments}")
+    @MethodSource("getSuccessPlay")
+    void handleSuccessPlay(Play play) throws Throwable {
+        playService.handlePlay(play);
+    }
 
-
+    @ParameterizedTest(name = "Testing response for [{index}] {arguments}")
+    @MethodSource("getPointPlays")
+    void handlePointsPlay(Play play) throws Throwable {
+        playService.handlePlay(play);
+        expectedException.expect(PointException.class);
+        expectedException.expectMessage("Point for side:");
     }
 }
