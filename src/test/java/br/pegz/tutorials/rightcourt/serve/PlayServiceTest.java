@@ -20,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -55,7 +54,7 @@ class PlayServiceTest {
                         .height(Height.MEDIUM)
                         .speed(Speed.AVG)
                         .build());
-        assertDoesNotThrow(() -> playService.serve());
+        playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
         verify(this.scoreNotifierService, atLeastOnce()).notifyMyPoint(anyInt());
         verify(this.scoreNotifierService, never()).notifyFoePoint(anyInt());
@@ -74,7 +73,7 @@ class PlayServiceTest {
                         .height(Height.BEYOND_REACH)
                         .speed(Speed.AVG)
                         .build());
-        assertDoesNotThrow(() -> playService.serve());
+        playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
         verify(this.scoreNotifierService, never()).notifyMyPoint(anyInt());
         verify(this.scoreNotifierService, atLeastOnce()).notifyFoePoint(anyInt());
@@ -116,14 +115,14 @@ class PlayServiceTest {
     @DisplayName("When returning play")
     @ParameterizedTest(name = "On returning play for {index}:[{arguments}]")
     @MethodSource("getSuccessPlay")
-    void handleSuccessPlay(Play play) {
-        assertDoesNotThrow(() -> playService.handlePlay(play));
+    void handleSuccessPlay(Play play) throws Throwable {
+        playService.handlePlay(play);
     }
 
     @DisplayName("When Point for one of the sides")
     @ParameterizedTest(name = "On returning play for {index}:[{arguments}]")
     @MethodSource("getPointPlays")
-    void handlePointsPlay(Play play) {
+    void handlePointsPlay(Play play) throws Throwable {
         assertThrows(PointException.class, () -> playService.handlePlay(play), "Point for side:");
     }
 }
