@@ -4,15 +4,14 @@ import br.pegz.tutorials.rightcourt.persistence.Play;
 import br.pegz.tutorials.rightcourt.persistence.enums.Height;
 import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
+import br.pegz.tutorials.rightcourt.score.ScoreNotifierService;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
 import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
-import org.junit.Rule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,10 +20,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -36,9 +38,8 @@ class PlayServiceTest {
 
     @MockBean
     CourtResource courtResource;
-
-    @Rule
-    ExpectedException expectedException = ExpectedException.none();
+    @MockBean
+    ScoreNotifierService scoreNotifierService;
 
     @DisplayName("When serving, receive play from Left that accounts Point for RIGHT SIDE")
     @Test
@@ -55,8 +56,8 @@ class PlayServiceTest {
                         .build());
         playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
-        expectedException.expect(PointException.class);
-        expectedException.expectMessage("Point for side: RIGHT");
+        verify(this.scoreNotifierService, atLeastOnce()).notifyMyPoint(anyInt());
+        verify(this.scoreNotifierService, never()).notifyFoePoint(anyInt());
     }
 
     @DisplayName("When serving, receive play from Left that accounts Point for LEFT SIDE")
@@ -72,11 +73,10 @@ class PlayServiceTest {
                         .height(Height.BEYOND_REACH)
                         .speed(Speed.AVG)
                         .build());
-        playService.serve()
-                .doOnEach(playSignal -> assertEquals(atomicInteger.get(), playSignal.get().getCount().intValue()));
+        playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
-        expectedException.expect(PointException.class);
-        expectedException.expectMessage("Point for side: RIGHT");
+        verify(this.scoreNotifierService, never()).notifyMyPoint(anyInt());
+        verify(this.scoreNotifierService, atLeastOnce()).notifyFoePoint(anyInt());
     }
 
     public final static Play winForRight = Play.builder()
@@ -87,6 +87,7 @@ class PlayServiceTest {
             .height(Height.BURNT)
             .effect(false)
             .build();
+
     final static Play winForLeft = Play.builder()
             .effect(true)
             .height(Height.BEYOND_REACH)
@@ -111,17 +112,17 @@ class PlayServiceTest {
         return Stream.<Play>builder().add(winForLeft).add(winForRight).build();
     }
 
-    @ParameterizedTest(name = "Testing response for [{index}] {arguments}")
+    @DisplayName("When returning play")
+    @ParameterizedTest(name = "On returning play for {index}:[{arguments}]")
     @MethodSource("getSuccessPlay")
     void handleSuccessPlay(Play play) throws Throwable {
         playService.handlePlay(play);
     }
 
-    @ParameterizedTest(name = "Testing response for [{index}] {arguments}")
+    @DisplayName("When Point for one of the sides")
+    @ParameterizedTest(name = "On returning play for {index}:[{arguments}]")
     @MethodSource("getPointPlays")
     void handlePointsPlay(Play play) throws Throwable {
-        playService.handlePlay(play);
-        expectedException.expect(PointException.class);
-        expectedException.expectMessage("Point for side:");
+        assertThrows(PointException.class, () -> playService.handlePlay(play), "Point for side:");
     }
 }
