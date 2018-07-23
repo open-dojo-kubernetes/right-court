@@ -30,17 +30,17 @@ ext {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
-	compile("org.springframework.boot:spring-boot-starter-amqp")
-	compile('org.springframework.boot:spring-boot-starter-webflux')
-	compile('org.springframework.cloud:spring-cloud-starter-netflix-hystrix')
-	compile('org.springframework.cloud:spring-cloud-stream-reactive')
-	compile('org.springframework.retry:spring-retry')
-	compileOnly('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.junit.jupiter:junit-jupiter-api:5.2.0')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
+	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-actuator')
+	compile(group:'org.springframework.boot', plugin: 'spring-boot-starter-data-redis')
+	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-amqp')
+	compile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-webflux')
+	compile(group: 'org.springframework.cloud', plugin: 'spring-cloud-starter-netflix-hystrix')
+	compile(group: 'org.springframework.cloud', plugin: 'spring-cloud-stream-reactive')
+	compile(group: 'org.springframework.retry', plugin: 'spring-retry')
+	compileOnly(group: 'org.projectlombok', plugin: 'lombok')
+	testCompile(group: 'org.springframework.boot', plugin: 'spring-boot-starter-test')
+	testCompile(group: 'org.junit.jupiter', plugin: 'junit-jupiter-api')
+	testRuntime(group: 'org.junit.jupiter', plugin: 'junit-jupiter-engine')
 }
 
 dependencyManagement {
