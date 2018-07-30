@@ -34,8 +34,4 @@ public class EndpointMapping {
         Flux<Probe> probeFlux = Flux.concat(probeConfiguration.rabbitMQProbe(), probeConfiguration.leftPlayerProbe());
         return ServerResponse.ok().body(probeFlux, Probe.class);
     }
-
-
-
-
 }
