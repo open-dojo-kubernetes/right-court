@@ -43,7 +43,7 @@ jobs:
 
       - store_artifacts:
           path: /code/test-results
-          destination: prefix
+          destination: test-result-
 
 
 
