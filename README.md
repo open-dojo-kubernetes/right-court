@@ -1,5 +1,5 @@
 # Right-Court  
-[![CircleCI](https://circleci.com/gh/open-dojo-kubernetes/right-court/tree/master.svg?style=svg)](https://circleci.com/gh/open-dojo-kubernetes/right-court/tree/master) [![Coverage Status](https://coveralls.io/repos/github/open-dojo-kubernetes/right-court/badge.svg?branch=master)](https://coveralls.io/github/open-dojo-kubernetes/right-court?branch=master)
+[![Build Status](https://travis-ci.org/open-dojo-kubernetes/right-court.svg?branch=master)](https://travis-ci.org/open-dojo-kubernetes/right-court) [![Coverage Status](https://coveralls.io/repos/github/open-dojo-kubernetes/right-court/badge.svg?branch=master)](https://coveralls.io/github/open-dojo-kubernetes/right-court?branch=master)
 
 Java Spring-boot
  
