@@ -1,6 +1,5 @@
-package br.pegz.tutorials.rightcourt.serve.reactivecontroller;
+package br.pegz.tutorials.rightcourt.configuration;
 
-import br.pegz.tutorials.rightcourt.configuration.ProbeConfiguration;
 import br.pegz.tutorials.rightcourt.configuration.model.Probe;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

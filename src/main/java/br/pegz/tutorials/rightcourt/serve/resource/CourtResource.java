@@ -28,7 +28,9 @@ public class CourtResource {
         Assert.isTrue(courtConfiguration.checkLeftCourtStatus(), "Left Court not available, please retry later");
         ResponseEntity<Play> playResponseEntity = restTemplate.postForEntity(CourtConfiguration.LEFT_PLAY, myPlay, Play.class);
         if(playResponseEntity.getStatusCode().is5xxServerError()) {
-            throw new PointException(myPlay.getIncomingSide());
+            final PointException pointException = new PointException(myPlay.getIncomingSide());
+            log.error("Notifying my point", pointException);
+            throw pointException;
         } else {
             return playResponseEntity.getBody();
         }
