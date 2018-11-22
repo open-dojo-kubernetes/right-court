@@ -79,7 +79,7 @@ class PlayServiceTest {
         verify(this.scoreNotifierService, atLeastOnce()).notifyFoePoint(anyInt());
     }
 
-    public final static Play winForRight = Play.builder()
+    private final static Play winForRight = Play.builder()
             .innerSide(Side.NET)
             .incomingSide(Side.LEFT)
             .count(6)
@@ -87,8 +87,7 @@ class PlayServiceTest {
             .height(Height.BURNT)
             .effect(false)
             .build();
-
-    final static Play winForLeft = Play.builder()
+    private final static Play winForLeft = Play.builder()
             .effect(true)
             .height(Height.BEYOND_REACH)
             .incomingSide(Side.LEFT)
@@ -97,7 +96,7 @@ class PlayServiceTest {
             .innerSide(Side.RIGHT)
             .build();
 
-    static Stream<Play> getSuccessPlay() {
+    private static Stream<Play> getSuccessPlay() {
         return Stream.<Play>builder().add(Play.builder()
                 .innerSide(Side.LEFT)
                 .incomingSide(Side.LEFT)
@@ -108,7 +107,7 @@ class PlayServiceTest {
                 .build()).build();
     }
 
-    static Stream<Play> getPointPlays() {
+    private static Stream<Play> getPointPlays() {
         return Stream.<Play>builder().add(winForLeft).add(winForRight).build();
     }
 

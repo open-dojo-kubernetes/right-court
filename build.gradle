@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.0.RELEASE'
+		springBootVersion = '2.1.0.RELEASE'
 		lombokPluginVersion = '1.14'
 	}
 	repositories {
@@ -23,11 +23,12 @@ apply plugin: 'io.franzbecker.gradle-lombok'
 
 lombok {
 	sha256 = ""
+	version = '1.18.4'
 }
 
 group = 'br.pegz.tutorials'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 repositories {
 	mavenCentral()
@@ -38,7 +39,7 @@ repositories {
 ext {
 	springCloudVersion = 'Finchley.M8'
 	junit5Version = '5.2.0'
-	lombokVersion = '1.18.0'
+	lombokVersion = '1.18.4'
 }
 
 dependencies {

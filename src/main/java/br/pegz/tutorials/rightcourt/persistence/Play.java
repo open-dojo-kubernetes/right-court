@@ -5,7 +5,9 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Builder
