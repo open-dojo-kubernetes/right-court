@@ -6,7 +6,7 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import br.pegz.tutorials.rightcourt.score.ScoreNotifierService;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
-import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
+import br.pegz.tutorials.rightcourt.serve.resource.RestCourtResource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ class PlayServiceTest {
     PlayService playService;
 
     @MockBean
-    CourtResource courtResource;
+    RestCourtResource restCourtResource;
     @MockBean
     ScoreNotifierService scoreNotifierService;
 
@@ -45,7 +45,7 @@ class PlayServiceTest {
     @Test
     void servePointForRight() throws Throwable {
         AtomicInteger atomicInteger = new AtomicInteger(1);
-        given(this.courtResource.sendPlayToOtherSide(any(Play.class)))
+        given(this.restCourtResource.sendPlayToOtherSide(any(Play.class)))
                 .willReturn(Play.builder()
                         .incomingSide(Side.LEFT)
                         .count(atomicInteger.getAndAdd(2))
@@ -55,7 +55,7 @@ class PlayServiceTest {
                         .speed(Speed.AVG)
                         .build());
         playService.serve();
-        verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
+        verify(this.restCourtResource, atMost(1)).sendPlayToOtherSide(any());
         verify(this.scoreNotifierService, atLeastOnce()).notifyMyPoint(anyInt());
         verify(this.scoreNotifierService, never()).notifyFoePoint(anyInt());
     }
@@ -64,7 +64,7 @@ class PlayServiceTest {
     @Test
     void servePointForLeft() throws Throwable {
         AtomicInteger atomicInteger = new AtomicInteger(1);
-        given(this.courtResource.sendPlayToOtherSide(any(Play.class)))
+        given(this.restCourtResource.sendPlayToOtherSide(any(Play.class)))
                 .willReturn(Play.builder()
                         .incomingSide(Side.LEFT)
                         .count(atomicInteger.getAndAdd(2))
@@ -74,7 +74,7 @@ class PlayServiceTest {
                         .speed(Speed.AVG)
                         .build());
         playService.serve();
-        verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
+        verify(this.restCourtResource, atMost(1)).sendPlayToOtherSide(any());
         verify(this.scoreNotifierService, never()).notifyMyPoint(anyInt());
         verify(this.scoreNotifierService, atLeastOnce()).notifyFoePoint(anyInt());
     }
