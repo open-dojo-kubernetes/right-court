@@ -20,24 +20,24 @@ import java.util.Random;
 @Service
 public class PlayService {
 
-    private CourtResource courtResource;
+    private CourtResource restCourtResource;
     private Random random = new SecureRandom();
     private ScoreNotifierService scoreNotifierService;
 
-    public PlayService(CourtResource courtResource, ScoreNotifierService scoreNotifierService) {
-        this.courtResource = courtResource;
+    public PlayService(CourtResource restCourtResource, ScoreNotifierService scoreNotifierService) {
+        this.restCourtResource = restCourtResource;
         this.scoreNotifierService = scoreNotifierService;
     }
 
     public Flux<Play> serve() throws PointException {
         List<Play> plays = Lists.newArrayList(getServePlay());
-        Play incomingPlay = courtResource.sendPlayToOtherSide(getServePlay());
+        Play incomingPlay = restCourtResource.sendPlayToOtherSide(getServePlay());
         while (canContinuePlay(incomingPlay)) {
             log.info("Received play: {}", incomingPlay);
             plays.add(incomingPlay);
             Play myPlay = handlePlay(incomingPlay);
             plays.add(myPlay);
-            incomingPlay = courtResource.sendPlayToOtherSide(myPlay);
+            incomingPlay = restCourtResource.sendPlayToOtherSide(myPlay);
         }
         notifyPoint(incomingPlay);
         return Flux.fromStream(plays.stream());
