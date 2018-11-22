@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
-public class RestCourtResource {
+public class RestCourtResource implements CourtResource {
 
     private final RestTemplate restTemplate;
     private CourtConfiguration courtConfiguration;

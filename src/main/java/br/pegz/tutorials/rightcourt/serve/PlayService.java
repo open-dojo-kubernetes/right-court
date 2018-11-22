@@ -6,7 +6,7 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import br.pegz.tutorials.rightcourt.score.ScoreNotifierService;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
-import br.pegz.tutorials.rightcourt.serve.resource.RestCourtResource;
+import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,11 +20,11 @@ import java.util.Random;
 @Service
 public class PlayService {
 
-    private RestCourtResource restCourtResource;
+    private CourtResource restCourtResource;
     private Random random = new SecureRandom();
     private ScoreNotifierService scoreNotifierService;
 
-    public PlayService(RestCourtResource restCourtResource, ScoreNotifierService scoreNotifierService) {
+    public PlayService(CourtResource restCourtResource, ScoreNotifierService scoreNotifierService) {
         this.restCourtResource = restCourtResource;
         this.scoreNotifierService = scoreNotifierService;
     }
