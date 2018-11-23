@@ -30,9 +30,11 @@ lombok {
 	version = '1.18.4'
 }
 
-group = 'br.pegz.tutorials'
+group = 'org.opendojo'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 11
+sourceCompatibility = 10
+
+
 
 repositories {
 	mavenCentral()
