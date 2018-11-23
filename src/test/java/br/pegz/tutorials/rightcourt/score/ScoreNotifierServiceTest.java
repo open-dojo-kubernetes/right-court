@@ -3,6 +3,7 @@ package br.pegz.tutorials.rightcourt.score;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,7 +32,7 @@ class ScoreNotifierServiceTest {
     @Test
     void whenNotifyFoePoint_Error() {
         scoreNotifierService.notifyFoePoint(1);
-        Mockito.doThrow(RuntimeException.class).when(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
+        Mockito.doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
                 eq("{\"pointWinner\":\"LEFT\",\"playsCount\":1}"));
         Mockito.verify(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
                 eq("{\"pointWinner\":\"LEFT\",\"playsCount\":1}"));
@@ -40,7 +41,7 @@ class ScoreNotifierServiceTest {
     @Test
     void whenNotifyMyPoint_Error() {
         scoreNotifierService.notifyMyPoint(1);
-        Mockito.doThrow(RuntimeException.class).when(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
+        Mockito.doThrow(AmqpException.class).when(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
                 eq("{\"pointWinner\":\"RIGHT\",\"playsCount\":1}"));
         Mockito.verify(rabbitTemplate).convertAndSend(anyString(), eq("scores-java"),
                 eq("{\"pointWinner\":\"RIGHT\",\"playsCount\":1}"));
