@@ -2,5 +2,10 @@ language: java
 service_name: right-court
 jdk:
 - oraclejdk11
-notifications:
-  webhooks: https://coveralls.io/webhook?repo_token=COVERALLS_REPO_TOKEN
+addons:
+  sonarcloud:
+    organization: "open-dojo-kubernetes"
+    token:
+      secure: $SONAR_TOKEN
+script:
+- sonar-scanner
