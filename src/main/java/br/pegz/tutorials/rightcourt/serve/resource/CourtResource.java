@@ -1,39 +1,16 @@
 package br.pegz.tutorials.rightcourt.serve.resource;
 
-import br.pegz.tutorials.rightcourt.configuration.CourtConfiguration;
 import br.pegz.tutorials.rightcourt.persistence.Play;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import org.springframework.web.client.RestTemplate;
 
-@Slf4j
-@Service
-public class CourtResource {
+public interface CourtResource {
 
-    private final RestTemplate restTemplate;
-    private CourtConfiguration courtConfiguration;
-
-    @Autowired
-    public CourtResource(RestTemplate restTemplate, CourtConfiguration courtConfiguration) {
-        this.restTemplate = restTemplate;
-        this.courtConfiguration = courtConfiguration;
-    }
-
-    public Play sendPlayToOtherSide(Play myPlay) throws PointException {
-        log.info("Responding play with {}", myPlay);
-        Assert.isTrue(courtConfiguration.checkLeftCourtStatus(), "Left Court not available, please retry later");
-        ResponseEntity<Play> playResponseEntity = restTemplate.postForEntity(CourtConfiguration.LEFT_PLAY, myPlay, Play.class);
-        if(playResponseEntity.getStatusCode().is5xxServerError()) {
-            final PointException pointException = new PointException(myPlay.getIncomingSide());
-            log.error("Notifying my point", pointException);
-            throw pointException;
-        } else {
-            return playResponseEntity.getBody();
-        }
-    }
-
+    /**
+     * Sends the play to the other side of the court
+     *
+     * @param myPlay to send across the court.
+     * @return received play
+     * @throws PointException if there is an point in the received play or some error occurs.
+     */
+    Play sendPlayToOtherSide(Play myPlay) throws PointException;
 }

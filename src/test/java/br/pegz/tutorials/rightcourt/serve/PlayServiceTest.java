@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,6 +39,9 @@ class PlayServiceTest {
 
     @MockBean
     CourtResource courtResource;
+    @MockBean
+    RabbitTemplate rabbitTemplate;
+
     @MockBean
     ScoreNotifierService scoreNotifierService;
 

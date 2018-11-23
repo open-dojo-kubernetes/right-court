@@ -27,10 +27,10 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-class CourtResourceTest {
+class RestCourtResourceTest {
 
     @Autowired
-    CourtResource courtResource;
+    RestCourtResource restCourtResource;
     @MockBean
     RestTemplate restTemplate;
     @MockBean
@@ -52,7 +52,7 @@ class CourtResourceTest {
                                         .height(Height.LOW)
                                         .effect(true)
                                         .build()));
-        Play incomingSide = this.courtResource.sendPlayToOtherSide(Play.builder()
+        Play incomingSide = this.restCourtResource.sendPlayToOtherSide(Play.builder()
                 .speed(Speed.SLOW)
                 .incomingSide(Side.RIGHT)
                 .innerSide(Side.RIGHT)
@@ -73,7 +73,7 @@ class CourtResourceTest {
         given(this.restTemplate.postForEntity(anyString(), any(Play.class), eq(Play.class)))
                 .willReturn(ResponseEntity.status(511).build());
         assertThrows(PointException.class,
-                () -> this.courtResource.sendPlayToOtherSide(
+                () -> this.restCourtResource.sendPlayToOtherSide(
                         Play.builder()
                                 .speed(Speed.SLOW)
                                 .incomingSide(Side.RIGHT)
