@@ -9,11 +9,14 @@ import java.util.Optional;
 @Configuration
 public class CourtConfiguration {
 
-    @Autowired
     private RestTemplate restTemplate;
+    public final static String LEFT_COURT_BASE = "http://localhost:5000/left";
+    public final static String LEFT_PLAY = LEFT_COURT_BASE + "/play";
 
-    public static String LEFT_COURT_BASE  = "http://localhost:5000/left";
-    public static String LEFT_PLAY = LEFT_COURT_BASE + "/play";
+    @Autowired
+    public CourtConfiguration(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
 
     public boolean checkLeftCourtStatus() {

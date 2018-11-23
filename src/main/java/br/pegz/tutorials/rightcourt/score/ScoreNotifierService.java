@@ -19,7 +19,7 @@ public class ScoreNotifierService {
     public void notifyFoePoint(Integer count) {
         try {
             log.info("Notifying point for LEFT in the play #{}", count);
-            rabbitTemplate.convertAndSend(AMQPConfig.topicExchangeName, "scores-java", getNotifyScore(Side.LEFT, count));
+            rabbitTemplate.convertAndSend(AMQPConfig.TOPIC_EXCHANGE_NAME, "scores-java", getNotifyScore(Side.LEFT, count));
         } catch (Exception ex) {
             log.error("Rabbit is out of reach, point is nilled");
             log.info("Point is nilled, PRACTICE MODE!!!, but was {}", getNotifyScore(Side.LEFT, count));
@@ -29,7 +29,7 @@ public class ScoreNotifierService {
     public void notifyMyPoint(Integer count) {
         try {
             log.info("Notifying point for RIGHT in the play #{}", count);
-            rabbitTemplate.convertAndSend(AMQPConfig.topicExchangeName, "scores-java", getNotifyScore(Side.RIGHT, count));
+            rabbitTemplate.convertAndSend(AMQPConfig.TOPIC_EXCHANGE_NAME, "scores-java", getNotifyScore(Side.RIGHT, count));
         } catch (Exception ex) {
             log.error("Rabbit is out of reach, point is nilled", ex);
             log.info("Point is nilled, PRACTICE MODE!!!, but was {}", getNotifyScore(Side.RIGHT, count));

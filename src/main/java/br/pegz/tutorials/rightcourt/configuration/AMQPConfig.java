@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AMQPConfig {
 
-    public static final String topicExchangeName = "score-queue-exchange";
-
-    public static final String queueName = "score-queue";
+    public static final String TOPIC_EXCHANGE_NAME = "score-queue-exchange";
+    public static final String QUEUE_NAME = "score-queue";
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -34,7 +33,7 @@ public class AMQPConfig {
 
     @Bean
     public Queue myQueue() {
-        return new Queue(queueName);
+        return new Queue(QUEUE_NAME);
     }
 
 }

@@ -2,6 +2,7 @@ package br.pegz.tutorials.rightcourt.serve.resource;
 
 import br.pegz.tutorials.rightcourt.configuration.CourtConfiguration;
 import br.pegz.tutorials.rightcourt.persistence.Play;
+import br.pegz.tutorials.rightcourt.serve.exception.PointErrorCodes;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class RestCourtResource implements CourtResource {
         Assert.isTrue(courtConfiguration.checkLeftCourtStatus(), "Left Court not available, please retry later");
         ResponseEntity<Play> playResponseEntity = restTemplate.postForEntity(CourtConfiguration.LEFT_PLAY, myPlay, Play.class);
         if (playResponseEntity.getStatusCode().is5xxServerError()) {
-            final PointException pointException = new PointException(myPlay.getIncomingSide());
+            final PointException pointException = new PointException(PointErrorCodes.of(myPlay.getIncomingSide()));
             log.error("Notifying my point", pointException);
             throw pointException;
         } else {

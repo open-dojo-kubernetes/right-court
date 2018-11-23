@@ -5,6 +5,7 @@ import br.pegz.tutorials.rightcourt.persistence.enums.Height;
 import br.pegz.tutorials.rightcourt.persistence.enums.Side;
 import br.pegz.tutorials.rightcourt.persistence.enums.Speed;
 import br.pegz.tutorials.rightcourt.score.ScoreNotifierService;
+import br.pegz.tutorials.rightcourt.serve.exception.PointErrorCodes;
 import br.pegz.tutorials.rightcourt.serve.exception.PointException;
 import br.pegz.tutorials.rightcourt.serve.resource.CourtResource;
 import com.google.common.collect.Lists;
@@ -83,10 +84,10 @@ public class PlayService {
             return getRespondSpeed(incomingPlay);
         } else if (isLeftPoint(incomingPlay)) {
             scoreNotifierService.notifyFoePoint(incomingPlay.getCount());
-            throw new PointException(Side.LEFT);
+            throw new PointException(PointErrorCodes.LEFT_POINT);
         } else if (isRightPoint(incomingPlay)) {
             scoreNotifierService.notifyMyPoint(incomingPlay.getCount());
-            throw new PointException(Side.RIGHT);
+            throw new PointException(PointErrorCodes.RIGHT_POINT);
         }
         return null;
     }
