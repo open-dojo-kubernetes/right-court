@@ -13,7 +13,6 @@ public class ProbeConfiguration {
 
     private final RabbitTemplate rabbitTemplate;
 
-
     @Value("${spring.rabbitmq.host}")
     public String rabbitMQHost = "localhost";
 

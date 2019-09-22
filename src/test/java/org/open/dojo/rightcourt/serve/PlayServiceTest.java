@@ -30,6 +30,9 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.open.dojo.rightcourt.persistence.enums.Height.*;
+import static org.open.dojo.rightcourt.persistence.enums.Side.*;
+import static org.open.dojo.rightcourt.persistence.enums.Speed.AVG;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -40,6 +43,7 @@ class PlayServiceTest {
 
     @MockBean
     CourtResource courtResource;
+
     @MockBean
     RabbitTemplate rabbitTemplate;
 
@@ -52,12 +56,12 @@ class PlayServiceTest {
         AtomicInteger atomicInteger = new AtomicInteger(1);
         given(this.courtResource.sendPlayToOtherSide(any(Play.class)))
                 .willReturn(Play.builder()
-                        .incomingSide(Side.LEFT)
+                        .incomingSide(LEFT)
                         .count(atomicInteger.getAndAdd(2))
                         .effect(true)
-                        .innerSide(Side.NET)
-                        .height(Height.MEDIUM)
-                        .speed(Speed.AVG)
+                        .innerSide(NET)
+                        .height(MEDIUM)
+                        .speed(AVG)
                         .build());
         playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
@@ -71,12 +75,12 @@ class PlayServiceTest {
         AtomicInteger atomicInteger = new AtomicInteger(1);
         given(this.courtResource.sendPlayToOtherSide(any(Play.class)))
                 .willReturn(Play.builder()
-                        .incomingSide(Side.LEFT)
+                        .incomingSide(LEFT)
                         .count(atomicInteger.getAndAdd(2))
                         .effect(true)
-                        .innerSide(Side.LEFT)
-                        .height(Height.BEYOND_REACH)
-                        .speed(Speed.AVG)
+                        .innerSide(LEFT)
+                        .height(BEYOND_REACH)
+                        .speed(AVG)
                         .build());
         playService.serve();
         verify(this.courtResource, atMost(1)).sendPlayToOtherSide(any());
@@ -85,29 +89,29 @@ class PlayServiceTest {
     }
 
     private final static Play winForRight = Play.builder()
-            .innerSide(Side.NET)
-            .incomingSide(Side.LEFT)
+            .innerSide(NET)
+            .incomingSide(LEFT)
             .count(6)
             .speed(Speed.FAST)
-            .height(Height.BURNT)
+            .height(BURNT)
             .effect(false)
             .build();
     private final static Play winForLeft = Play.builder()
             .effect(true)
-            .height(Height.BEYOND_REACH)
-            .incomingSide(Side.LEFT)
+            .height(BEYOND_REACH)
+            .incomingSide(LEFT)
             .speed(Speed.FAST)
             .count(1)
-            .innerSide(Side.RIGHT)
+            .innerSide(RIGHT)
             .build();
 
     private static Stream<Play> getSuccessPlay() {
         return Stream.<Play>builder().add(Play.builder()
-                .innerSide(Side.LEFT)
-                .incomingSide(Side.LEFT)
+                .innerSide(LEFT)
+                .incomingSide(LEFT)
                 .speed(Speed.SLOW)
                 .count(0)
-                .height(Height.LOW)
+                .height(LOW)
                 .effect(true)
                 .build()).build();
     }
@@ -128,5 +132,11 @@ class PlayServiceTest {
     @MethodSource("getPointPlays")
     void handlePointsPlay(Play play) throws Throwable {
         Assertions.assertThrows(PointException.class, () -> playService.handlePlay(play), "Point for side:");
+    }
+
+    @DisplayName("Receive a stream of plays from different players and tables")
+    @Test
+    void checkRabbitMq() throws Throwable {
+
     }
 }

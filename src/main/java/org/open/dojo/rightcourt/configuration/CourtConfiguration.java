@@ -11,6 +11,7 @@ public class CourtConfiguration {
 
     public final static String LEFT_COURT_BASE = "http://localhost:5000/left";
     public final static String LEFT_PLAY = LEFT_COURT_BASE + "/play";
+
     private RestTemplate restTemplate;
 
     @Autowired
